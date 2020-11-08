@@ -12,13 +12,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static void FileOperation(void);
-static void InputStream(FILE * const Stream);
-static void UnusualToExit(const char * const str);
+static const char * const READ  = "r";
+static const char * const OpenFileError = "打开文件%s失败!\n";
+static const char * const CloseFileError = "关闭文件%s失败!\n";
+static const char * const FileOperationError = "文件%s操作失败!\n";
+
+#ifdef WINDOWS_VISUALSTUDIO
+	#define LEN 225
+#else
+	#define LEN 256
+#endif
+
+void FileOperation(const char * const FileName, const char * const Mode);
+void InputStream(FILE * const Stream);
+static void UnusualToExit(const char * const str, const char * const FileName);
 
 int main(void)
 {
-	FileOperation();
+	const char FileName[LEN] = __FILE__;
+	FileOperation(FileName, READ);
 
 #ifdef WINDOWS_VISUALSTUDIO
 	_getch();
@@ -26,16 +38,16 @@ int main(void)
 	return 0;
 }
 
-static void FileOperation(void)
+void FileOperation(const char * const FileName, const char * const Mode)
 {
 #ifdef WINDOWS_VISUALSTUDIO
 	FILE *FilePointer;
-	const errno_t err = fopen_s(&FilePointer, __FILE__, "r");
+	const errno_t err = fopen_s(&FilePointer, FileName, Mode);
 
 	// if (err == 0)
 	if (!err)
 #else
-	FILE * const FilePointer = fopen(__FILE__, "r");
+	FILE * const FilePointer = fopen(FileName, Mode);
 
 	// if (FilePointer != NULL)
 	if (FilePointer)
@@ -45,17 +57,21 @@ static void FileOperation(void)
 
 		// if (ferror(FilePointer) != 0)
 		if (ferror(FilePointer))
-			UnusualToExit("文件%s操作失败!\n");
+			UnusualToExit(FileOperationError, FileName);
 
 #ifdef WINDOWS_VISUALSTUDIO
 		// if (FilePointer != NULL)
 		if (FilePointer)
 #endif
-			fclose(FilePointer);
+			// if (fclose(FilePointer) != 0)
+			if (fclose(FilePointer))
+				UnusualToExit(CloseFileError, FileName);
 	}
+	else
+		UnusualToExit(OpenFileError, FileName);
 }
 
-static void InputStream(FILE * const Stream)
+void InputStream(FILE * const Stream)
 {
 	char ch;
 	// while (feof(Stream) == 0)
@@ -67,13 +83,17 @@ static void InputStream(FILE * const Stream)
 	}
 }
 
-static void UnusualToExit(const char * const str)
+static void UnusualToExit(const char * const str, const char * const FileName)
 {
+	// if (str != NULL)
+	if (str)
+	{
 #ifdef WINDOWS_VISUALSTUDIO
-	fprintf_s(stderr, str, __FILE__);
-	_getch();
+		fprintf_s(stderr, str, FileName);
+		_getch();
 #else
-	fprintf(stderr, str, __FILE__);
+		fprintf(stderr, str, FileName);
 #endif
-	exit(EXIT_FAILURE); // exit (1);
+		exit(EXIT_FAILURE); // exit (1);
+	}
 }
