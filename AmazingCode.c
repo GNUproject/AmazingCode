@@ -1,7 +1,7 @@
 
-// ³ÌĞòÔËĞĞ½á¹û¼´¸Ã³ÌĞòÔ´´úÂëµÄ³ÌĞò
+// ç¨‹åºè¿è¡Œç»“æœå³è¯¥ç¨‹åºæºä»£ç çš„ç¨‹åº
 
-// µ±Ç°Æ½Ì¨
+// å½“å‰å¹³å°
 #define WINDOWS_VISUALSTUDIO
 // #define LINUX_GCC
 // #define MACOS_XCODE
@@ -13,10 +13,10 @@
 #include <stdlib.h>
 
 static const char* const ReadTextFile		= "r";
-static const char* const NullPointer		= "¿ÕÖ¸Õë!\n";
-static const char* const OpenFileError		= "´ò¿ªÎÄ¼ş%sÊ§°Ü!\n";
-static const char* const CloseFileError		= "¹Ø±ÕÎÄ¼ş%sÊ§°Ü!\n";
-static const char* const FileOperationError	= "ÎÄ¼ş%s²Ù×÷Ê§°Ü!\n";
+static const char* const NullPointer		= "ç©ºæŒ‡é’ˆ!\n";
+static const char* const OpenFileError		= "æ‰“å¼€æ–‡ä»¶%så¤±è´¥!\n";
+static const char* const CloseFileError		= "å…³é—­æ–‡ä»¶%så¤±è´¥!\n";
+static const char* const FileOperationError	= "æ–‡ä»¶%sæ“ä½œå¤±è´¥!\n";
 
 void FileOperation(const char* const FileName, const char* const Mode);
 void InputStream(FILE* const Stream);
@@ -48,7 +48,7 @@ void FileOperation(const char* const FileName, const char* const Mode)
 	// if (error != 0)
 	if (error)
 #else
-	FILE * const restrict FilePointer = fopen(FileName, Mode);
+	FILE * restrict FilePointer = fopen(FileName, Mode);
 
 	// if (FilePointer == NULL)
 	if (!FilePointer)
@@ -58,10 +58,10 @@ void FileOperation(const char* const FileName, const char* const Mode)
 	}
 
 	// if (strcmp(Mode, ReadTextFile) == 0)
-	if (!strcmp(Mode, ReadTextFile)) // ÈôÖ´ĞĞ¶Á²Ù×÷
+	if (!strcmp(Mode, ReadTextFile)) // è‹¥æ‰§è¡Œè¯»æ“ä½œ
 	{
 		// if (strrchr(Mode, 'b') == NULL)
-		if (!strrchr(Mode, 'b')) // ÈôÎªÎÄ±¾ÎÄ¼ş
+		if (!strrchr(Mode, 'b')) // è‹¥ä¸ºæ–‡æœ¬æ–‡ä»¶
 		{
 			InputStream(FilePointer);
 		}
@@ -84,6 +84,7 @@ void FileOperation(const char* const FileName, const char* const Mode)
 			UnusualToExit(CloseFileError, FileName);
 		}
 	}
+	FilePointer = NULL;
 }
 
 void InputStream(FILE* const Stream)
