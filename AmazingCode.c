@@ -101,7 +101,9 @@ void InputStream(FILE* const Stream)
 	{
 		ch = getc(Stream);
 		if (ch != EOF)
+		{
 			fputc(ch, stdout);
+		}
 	}
 }
 
