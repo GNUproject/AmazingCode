@@ -48,7 +48,7 @@ void FileOperation(const char* const FileName, const char* const Mode)
 	// if (error != 0)
 	if (error)
 #else
-	FILE * restrict FilePointer = fopen(FileName, Mode);
+	FILE * restrict const FilePointer = fopen(FileName, Mode);
 
 	// if (FilePointer == NULL)
 	if (!FilePointer)
@@ -84,7 +84,6 @@ void FileOperation(const char* const FileName, const char* const Mode)
 			UnusualToExit(CloseFileError, FileName);
 		}
 	}
-	FilePointer = NULL;
 }
 
 void InputStream(FILE* const Stream)
