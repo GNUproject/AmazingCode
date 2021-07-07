@@ -43,10 +43,10 @@ void FileOperation(const char* const FileName, const char* const Mode)
 
 #ifdef WINDOWS_VISUALSTUDIO
 	FILE *FilePointer = NULL;
-	const errno_t error = fopen_s(&FilePointer, FileName, Mode);
+	const errno_t Error = fopen_s(&FilePointer, FileName, Mode);
 
-	// if (error != 0)
-	if (error)
+	// if (Error != 0)
+	if (Error)
 #else
 	FILE * restrict const FilePointer = fopen(FileName, Mode);
 
