@@ -57,14 +57,10 @@ void FileOperation(const char* const FileName, const char* const Mode)
 		UnusualToExit(OpenFileError, FileName);
 	}
 
-	// if (strcmp(Mode, ReadTextFile) == 0)
-	if (!strcmp(Mode, ReadTextFile)) // 若执行读操作
+	// if (strcmp(Mode, "r") == 0)
+	if (!strcmp(Mode, "r")) // 若执行读操作
 	{
-		// if (strrchr(Mode, 'b') == NULL)
-		if (!strrchr(Mode, 'b')) // 若为文本文件
-		{
-			InputStream(FilePointer);
-		}
+                InputStream(FilePointer); // 若为文本文件
 	}
 
 	// if (ferror(FilePointer) != 0)
